@@ -1,48 +1,51 @@
-import type { StatsMethods } from 'https://esm.sh/compromise-stats@0.1.0';
-import View from 'https://esm.sh/v132/compromise@14.10.0/types/view/three.d.ts';
-import { TextrankMethods } from './textrank_plugin.ts';
+import { CompromiseView, StatsMethods } from './deps.ts';
+import { TextrankMethods } from './plugin/types.d.ts';
+
+export type Term = {
+  text: string,
+  pre: string,
+  post: string,
+  normal: string,
+  tags?: Set<string>,
+  index?: [n?: number, start?: number],
+  id?: string,
+  chunk?: string,
+  dirty?: boolean
+  syllables?: string[],
+}
+
+export type Sentence = { 
+  text: string;
+  terms: Term[];
+}
 
 /**
  * Adds plugin methods to the regular view.
  */
-export type PluginView = View & StatsMethods & TextrankMethods;
+export type View = CompromiseView & StatsMethods & TextrankMethods;
 
 /**
  * An ordered list of keywords with scores.
  */
-export type ScoredResult = [string, number][];
-
-/**
- * The list of features that will be extracted.
- */
-export type Features = {
-	ngrams: ScoredResult;
-	tfidf: ScoredResult;
-	textrank: ScoredResult;
-};
+export type Scores = [string, number][];
 
 /**
  * Attributes obtained from parsing the document front-matter.
  */
-export type DocumentAttributes = Record<string, unknown>;
+export type FileAttrs = Record<string, unknown>;
 
 /**
  * Result of parsing the document fetched from the CLI.
  */
-export type ParsedDocument = {
-	attrs: DocumentAttributes;
+export type File = {
+	attrs: FileAttrs;
 	body: string;
 };
 
 /**
- * Command line flags - the document should be a path passed
- * as the very last argument.
+ * Print this data to the console.
  */
-export type CommandLineFlags = {
-	[x: string]: unknown;
-	a?: 'all' | 'textrank' | 'tfidf' | 'ngrams';
-	l?: number;
-	algo: 'all' | 'textrank' | 'tfidf' | 'ngrams';
-	limit: number;
-	_: string[]; // The document path should be here
+export type Print = {
+	attrs: FileAttrs;
+	scores: [string, number][];
 };

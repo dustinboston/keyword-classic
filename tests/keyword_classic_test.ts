@@ -1,4 +1,4 @@
-import { assertEquals } from 'https://deno.land/std@0.200.0/assert/mod.ts';
+import { assertEquals } from './deps.ts';
 import { preliminaries } from '../src/keyword_classic.ts';
 
 // For preset heavy [1]
