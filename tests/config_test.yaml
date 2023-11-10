@@ -1,0 +1,33 @@
+weight:
+  tags:
+    Cookie: 1.5
+ignore:
+  tags:
+    # Numbers
+    - NumericValue
+    - Money
+    - Fraction
+    - Percent
+    - PhoneNumber
+    - Date
+    # Stopwords
+    - Determiner
+    - Preposition
+    - Conjunction
+    - Pronoun
+    - Copula
+    - "&"
+    # Internet
+    - Url
+    - Emoji
+    - Emoticon
+    - AtMention
+    - Email
+    - HashTag
+extend:
+  tags:
+    Cookie:
+      isA: ProperNoun
+  words:
+    oreo: Cookie
+

@@ -1,4 +1,5 @@
 import { yaml, yamlFrontMatter } from './deps.ts';
+import { ParsedYaml } from './types.d.ts';
 
 export async function readFile(path: string): Promise<[string, string]> {
 	const bytes = await Deno.readFile(path);
@@ -27,7 +28,6 @@ export function readDirectory(dirPath: string): Promise<[string, string][]> {
 	return Promise.all(requests);
 }
 
-type ParsedYaml<T> = { attrs: T; body: string };
 export function parseText<T>(text: string): ParsedYaml<T> {
 	if (yamlFrontMatter.test(text)) {
 		return yamlFrontMatter.extract<T>(text);

@@ -3,10 +3,7 @@
 		"allowJs": true,
 		"checkJs": true,
 		"lib": ["deno.window"],
-		"strict": true,
-		"types": [
-			"npm:natural/lib/natural/index.d.ts"
-		]
+		"strict": true
 	},
 	"lint": {
 		"include": ["**/*.ts", "**/*.jsonc"],
