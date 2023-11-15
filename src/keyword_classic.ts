@@ -24,6 +24,19 @@ import { Vert } from './vert.ts';
 import { IGNORE_LIST } from './constants.ts';
 import { KewordExtractionStrategy } from './keword_extraction_strategy.ts';
 
+/**
+ *
+ * Keywords with a single value don't seem to provide as much value as 
+ * ngrams, so instead of using keywords, just use ngrams. 
+ * @example Keywords Usage
+ * ```typescript
+ * const keywords = extractKeywordsTextrank(document, metadata);
+ * const tagKeywords = applyTagWeights(keywords, config);
+ * const sortedKeywords = tagKeywords.toSorted((a, b) => b.score - a.score);
+ * const scoredKeywords = getScores(sortedKeywords)
+ * const topKKeywords = topkResults(scoredKeywords, 10);
+ * ```
+ */
 export function keywordClassic(
 	data: ParsedYaml<FileAttrs>,
 	config: Config = {},
@@ -32,34 +45,11 @@ export function keywordClassic(
 
 	const metadata = preliminaries(data.body);
 	const document = extractDocument(metadata, config);
-
-  // Ngrams
 	const ngrams = extractNgramTextrank(document, metadata);
-	const tagNgrams = applyTagWeights(ngrams, config);
-  const sortedNgrams = tagNgrams.toSorted((a, b) => b.score - a.score);
+  const sortedNgrams = ngrams.toSorted((a, b) => b.score - a.score);
 	const scoredNgrams = getScores(sortedNgrams);
- //  const topKNgrams = topkResults(scoredNgrams, 2)
 
-  // console.log('ngrams')
-  // for (const score of sortedNgrams) {
-  //   // console.log(score.join(' '));
-  //   console.log(score.val, score.score, score.weights);
-  // }
-
-
-  // Keywords
-	const keywords = extractKeywordsTextrank(document, metadata);
-	const tagKeywords = applyTagWeights(keywords, config);
-  const sortedKeywords = tagKeywords.toSorted((a, b) => b.score - a.score);
-  const scoredKeywords = getScores(sortedKeywords)
-  // const topKKeywords = topkResults(scoredKeywords, 10);
-
-  // console.log('\nkeywords\n'.padEnd(80, '-'))
-  // for (const score of sortedKeywords) {
-  //   console.log(score.val, score.score, score.weights);
-  // }
-
-  return { scoredNgrams, scoredKeywords };
+  return scoredNgrams; 
 }
 
 export function preliminaries(text: string): DocumentMetadata[] {
@@ -112,7 +102,7 @@ export function extractKeywordsTextrank(
 	metadata: DocumentMetadata[],
 ): Vert[] {
   const words = document.flatMap((t) => t).map(u => [u]);
-	const textrank = new Textrank(new KewordExtractionStrategy(1));
+	const textrank = new Textrank(new KewordExtractionStrategy(2));
 	const ranked = textrank.extractData(words);
 	const completeTerms = recontextualizeTerms(ranked, metadata);
 	return completeTerms;
@@ -238,22 +228,15 @@ export async function parseArguments() {
 	const [, text] = await readFile(file);
 	const data = parseText<FileAttrs>(text);
 
-	return { data, config };
+	return { data, config, cli };
 }
 
 export async function main() {
-	const { data, config } = await parseArguments();
+	const { data, config, cli } = await parseArguments();
 	const results = keywordClassic(data, config);
+  const topK = topkResults(results, +cli.topk);
 
-	// const print: Print = {
-	// 	attrs: json.attrs ?? {},
-	// 	scores: topkResults(results.terms, +cli.topk),
-	// };
-	console.table(results.scoredKeywords);
-	console.table(results.scoredNgrams);
-
-	// console.log(JSON.stringify(print, null, '    '));
-	// onsole.table(topkResults(results.scores, +cli.topk));
+	console.log(JSON.stringify(topK, null, 4));
 }
 
 if (import.meta.main) {
