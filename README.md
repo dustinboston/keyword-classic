@@ -2,16 +2,12 @@
 
 # Keyword Classic
 
-Extracts keywords from a document using some classic NLP methods:
-
-- **Textrank:** Weighted Textrank over NGrams ([paper][textrank])
-- **NGrams:** Basic frequency-based NGrams ([compromise][compromise])
-- **TF-IDF:** Each sentence is considered a document ([compromise][compromise])
+Extracts keywords from a document using some classic NLP algorithms including Textrank, Cosine Similarity, Edit Distance, and TF-IDF.
 
 ## Usage
 
 ```sh
-deno run -A src/kwd_classic.ts path/to/file.md -l 10 -a all > keywords.json
+deno run -A src/kwd_classic.ts path/to/file.md
 ```
 
 ## Testing
@@ -19,6 +15,3 @@ deno run -A src/kwd_classic.ts path/to/file.md -l 10 -a all > keywords.json
 ```sh
 deno test -A
 ```
-
-[textrank]: https://web.eecs.umich.edu/~mihalcea/papers/mihalcea.emnlp04.pdf
-[compromise]: https://github.com/spencermountain/compromise/tree/master
