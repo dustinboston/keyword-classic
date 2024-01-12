@@ -13,7 +13,7 @@ import {
 	Config,
 	Corpus,
 	FileAttrs,
-	ParsedYaml,
+	ParsedFrontMatter,
 	SimilarityScore,
 } from './types.d.ts';
 import {
@@ -36,12 +36,11 @@ const EDIT_SIMILARITY_THRESHOLD = 0.0; // .1
 const KEYWORD_MATCH_SCORE_VALUE = .2;
 
 export function evaluateResults(
-	data: ParsedYaml<FileAttrs>,
-	config: Config = {},
+	data: ParsedFrontMatter<FileAttrs>,
 ) {
-	const results = keywordClassic(data, config);
-	const keywords = normalizeKeywords(data.attrs.keywords, config);
-	const scores = evaluateKeywords(results, keywords);
+	const results = keywordClassic(data);
+	const keywords = normalizeKeywords(data.attrs.keywords);
+	// const scores = evaluateKeywords(results, keywords);
 	// console.log('scores', scores);
 }
 
@@ -97,9 +96,9 @@ export function filterDuplicates(scores: SimilarityScore[]) {
 		if (i > 0) {
 			const last = arr[i - 1];
 			if (
-				!(score.score === last.score 
-          && score.aTerm === last.aTerm 
-          && score.bTerm === last.bTerm)
+				!(score.score === last.score &&
+					score.aTerm === last.aTerm &&
+					score.bTerm === last.bTerm)
 			) unique.push(score);
 		}
 		return unique;
@@ -235,8 +234,8 @@ export function applyIntersection(scores: SimilarityScore[]) {
  * evaluate_results uses the same interface as keyword_classic.
  */
 async function main() {
-	const { data, config } = await parseArguments();
-	evaluateResults(data, config);
+	const { data } = await parseArguments();
+	evaluateResults(data);
 }
 
 if (import.meta.main) {

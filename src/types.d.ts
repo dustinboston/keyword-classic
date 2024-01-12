@@ -80,12 +80,7 @@ export type Scores = [string, number][];
 /**
  * Attributes obtained from parsing the document front-matter.
  */
-export type FileAttrs = Record<string, unknown> & Partial<{
-  company: string;
-  industry: string;
-  position: string;
-  keywords: string[];
-}>;
+export type FileAttrs = Record<string, unknown>;
 
 /**
  * Result of parsing the document fetched from the CLI.
@@ -95,7 +90,7 @@ export type InputFile = {
 	body: string;
 };
 
-export type ParsedYaml<T> = { attrs: T; body: string };
+export type ParsedFrontMatter<T> = { attrs: T; body: string };
 
 /**
  * Print this data to the console.

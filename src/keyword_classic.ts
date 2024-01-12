@@ -13,10 +13,10 @@ import {
 	Config,
 	DocumentMetadata,
 	FileAttrs,
-	ParsedYaml,
+	ParsedFrontMatter,
 	Scores,
 } from './types.d.ts';
-import { parseText, parseYaml, readFile } from './file_system.ts';
+import { readFile } from './file_system.ts';
 import { getNgrams } from './ngrams.ts';
 import { NgramExtractionStrategy } from './ngram_extraction_strategy.ts';
 import { Textrank } from './textrank.ts';
@@ -25,9 +25,8 @@ import { IGNORE_LIST } from './constants.ts';
 import { KewordExtractionStrategy } from './keword_extraction_strategy.ts';
 
 /**
- *
- * Keywords with a single value don't seem to provide as much value as 
- * ngrams, so instead of using keywords, just use ngrams. 
+ * Keywords with a single value don't seem to provide as much value as
+ * ngrams, so instead of using keywords, just use ngrams.
  * @example Keywords Usage
  * ```typescript
  * const keywords = extractKeywordsTextrank(document, metadata);
@@ -38,18 +37,15 @@ import { KewordExtractionStrategy } from './keword_extraction_strategy.ts';
  * ```
  */
 export function keywordClassic(
-	data: ParsedYaml<FileAttrs>,
-	config: Config = {},
+	data: ParsedFrontMatter<FileAttrs>,
 ) {
-	if (config?.extend) compromise.extend(config.extend);
-
 	const metadata = preliminaries(data.body);
-	const document = extractDocument(metadata, config);
+	const document = extractDocument(metadata);
 	const ngrams = extractNgramTextrank(document, metadata);
-  const sortedNgrams = ngrams.toSorted((a, b) => b.score - a.score);
+	const sortedNgrams = ngrams.toSorted((a, b) => b.score - a.score);
 	const scoredNgrams = getScores(sortedNgrams);
 
-  return scoredNgrams; 
+	return scoredNgrams;
 }
 
 export function preliminaries(text: string): DocumentMetadata[] {
@@ -101,7 +97,7 @@ export function extractKeywordsTextrank(
 	document: Document,
 	metadata: DocumentMetadata[],
 ): Vert[] {
-  const words = document.flatMap((t) => t).map(u => [u]);
+	const words = document.flatMap((t) => t).map((u) => [u]);
 	const textrank = new Textrank(new KewordExtractionStrategy(2));
 	const ranked = textrank.extractData(words);
 	const completeTerms = recontextualizeTerms(ranked, metadata);
@@ -218,23 +214,20 @@ export async function parseArguments() {
 		Deno.exit(0);
 	}
 
-	const configFile = cli.config;
-	let config: Config = {};
-	if (cli.config) {
-		const [, yaml] = await readFile(configFile);
-		config = parseYaml<Config>(yaml);
-	}
-
 	const [, text] = await readFile(file);
-	const data = parseText<FileAttrs>(text);
-
-	return { data, config, cli };
+	return { 
+    data: { 
+      attrs: {}, 
+      body: text 
+    }, 
+    cli 
+  };
 }
 
 export async function main() {
-	const { data, config, cli } = await parseArguments();
-	const results = keywordClassic(data, config);
-  const topK = topkResults(results, +cli.topk);
+	const { data, cli } = await parseArguments();
+	const results = keywordClassic(data);
+	const topK = topkResults(results, +cli.topk);
 
 	console.log(JSON.stringify(topK, null, 4));
 }

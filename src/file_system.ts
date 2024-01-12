@@ -1,5 +1,4 @@
-import { yaml, yamlFrontMatter } from './deps.ts';
-import { ParsedYaml } from './types.d.ts';
+import { ParsedFrontMatter } from './types.d.ts';
 
 export async function readFile(path: string): Promise<[string, string]> {
 	const bytes = await Deno.readFile(path);
@@ -28,14 +27,3 @@ export function readDirectory(dirPath: string): Promise<[string, string][]> {
 	return Promise.all(requests);
 }
 
-export function parseText<T>(text: string): ParsedYaml<T> {
-	if (yamlFrontMatter.test(text)) {
-		return yamlFrontMatter.extract<T>(text);
-	}
-
-	throw new Error('Invalid front-matter.');
-}
-
-export function parseYaml<T>(text: string): T {
-	return yaml.parse(text) as T;
-}

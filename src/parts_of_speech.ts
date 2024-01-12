@@ -1,8 +1,8 @@
 import { compromise, flags } from './deps.ts';
-import { Config, DocumentMetadata, FileAttrs, ParsedYaml } from './types.d.ts';
-import { parseText, parseYaml, readFile } from './file_system.ts';
+import { DocumentMetadata, FileAttrs, ParsedFrontMatter } from './types.d.ts';
+import { parseText, readFile } from './file_system.ts';
 
-export function partsOfSpeech(data: ParsedYaml<FileAttrs>) {
+export function partsOfSpeech(data: ParsedFrontMatter<FileAttrs>) {
 	const metadata = preliminaries(data.body);
 	const document = extractDocument(metadata);
 	return document;
@@ -68,23 +68,16 @@ export async function parseArguments() {
 		Deno.exit(0);
 	}
 
-	const configFile = cli.config;
-	let config: Config = {};
-	if (cli.config) {
-		const [, yaml] = await readFile(configFile);
-		config = parseYaml<Config>(yaml);
-	}
-
 	const [, text] = await readFile(file);
 	const data = parseText<FileAttrs>(text);
 
-	return { data, config, cli };
+	return { data, cli };
 }
 
 export async function main() {
-	const { data, config, cli } = await parseArguments();
+	const { data } = await parseArguments();
 	const results = partsOfSpeech(data);
-  let out = [];
+  const out = [];
 	for (const result of results) {
     const [word, pos] = result.split('(');
     if (pos.includes('noun')) {
