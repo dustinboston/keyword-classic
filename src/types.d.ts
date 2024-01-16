@@ -20,6 +20,7 @@ export type Term = {
   chunk?: string,
   dirty?: boolean
   syllables?: string[],
+  root?: string,
 }
 
 export type DocumentMetadata = { 
@@ -89,8 +90,6 @@ export type InputFile = {
 	attrs: FileAttrs;
 	body: string;
 };
-
-export type ParsedFrontMatter<T> = { attrs: T; body: string };
 
 /**
  * Print this data to the console.

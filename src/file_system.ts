@@ -1,5 +1,3 @@
-import { ParsedFrontMatter } from './types.d.ts';
-
 export async function readFile(path: string): Promise<[string, string]> {
 	const bytes = await Deno.readFile(path);
 	const decoder = new TextDecoder('utf-8');
