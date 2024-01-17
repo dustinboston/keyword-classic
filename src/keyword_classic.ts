@@ -18,6 +18,12 @@ import { Textrank } from "./textrank.ts";
 import { Vert } from "./vert.ts";
 import { IGNORE_LIST, STOP_WORDS } from "./constants.ts";
 
+/**
+ * Get keywords using the Textrank algorithm.
+ *
+ * @param text to parse with special handling of markdown and frontmatter.
+ * @param extractNgrams will returns keywords with multiple words.
+ */
 export function keywordClassic(text: string, extractNgrams = false) {
   const metadata = preliminaries(text);
   const document = extractDocument(metadata);

@@ -1,13 +1,21 @@
-![Illustration of a retro car's dashboard. The radio dial is turned to a station labeled 'Keyword Classic'. The scene outside the car window reveals a vast desert landscape, cacti, and a setting sun, reminiscent of classic road trip adventures. DALL-E 3](./dashboard.png)
+![Illustration of a 50s era car dashboard](./dashboard.png)
 
 # Keyword Classic
 
-Extracts keywords from a document using some classic NLP algorithms including Textrank, Cosine Similarity, Edit Distance, and TF-IDF.
+Extracts keywords from a document using some classic NLP algorithms including 
+Textrank, Cosine Similarity, Edit Distance, and TF-IDF.
 
-## Usage
+## API Usage
+
+```typescript
+import * as kc from "https://deno.land/x/keyword_classic/@$MODULE_VERSION/mod.ts";
+
+```
+
+## CLI Usage
 
 ```sh
-deno run -A src/kwd_classic.ts path/to/file.md
+deno run -A ./src/kwd_classic.ts path/to/file.md
 ```
 
 ## Testing
