@@ -28,12 +28,12 @@ export type DocumentMetadata = {
   terms: Term[];
 }
 
-// export type TermSet = {
-// 	id: string;
-// 	termLists: Term[][];
-// };
-//
-//
+export type TermSet = {
+	id: string;
+	termLists: Term[][];
+};
+
+
 // export type Document = TermSet;
 
 export type Corpus = string[][];

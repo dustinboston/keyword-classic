@@ -87,31 +87,6 @@ export function computeTfIdf(
 }
 
 
-export function xcomputeTfIdf(
-  tfVectors: TfVector[], // Array of term frequency vectors for each document
-  idfVector: IdfVector,  // Single IDF vector for all terms in the corpus
-  documentCount: number, // The total number of documents (or n-grams in this context)
-  termCount: number,     // The total number of unique terms across all documents
-): TfIdfVector[] {
-  // Initialize the tfIdfVectors with zeros for all documents and terms
-  const tfIdfs: TfIdfVector[] = Array.from(
-    { length: documentCount },
-    () => Array.from({ length: termCount }, () => 0),
-  );
-
-  // Calculate TF-IDF for each term in each document
-  console.log('num terms from tfvec: %s vs termCount %s', tfVectors.length, termCount);
-  for (let i = 0; i < tfVectors.length; i++) {
-    for (let j = 0; j < tfVectors[i].length; j++) {
-      const tf = tfVectors[i][j];  // Term frequency for term j in document i
-      const idf = idfVector[j];    // Inverse document frequency for term j
-      tfIdfs[i][j] = tf * idf;     // Compute TF-IDF
-    }
-  }
-  return tfIdfs;
-}
-
-
 /**
  * Calculates the term frequency (TF) for each term in the document. TF is the
  * number of times a term appears in the document.

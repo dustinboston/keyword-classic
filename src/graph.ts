@@ -43,7 +43,7 @@ export function bfs(g: Vert[], search: Vert) {
   }
 }
 
-function printPath(G: Vert[], search: Vert, vert: Vert) {
+export function printPath(G: Vert[], search: Vert, vert: Vert) {
   if (vert === search) {
     console.log(search.val);
   } else if (vert.parent === null) {

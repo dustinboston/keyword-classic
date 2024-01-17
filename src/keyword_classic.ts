@@ -13,19 +13,21 @@ import { DocumentMetadata, Scores } from "./types.d.ts";
 import { readFile } from "./file_system.ts";
 import { getNgrams } from "./ngrams.ts";
 import { NgramExtractionStrategy } from "./ngram_extraction_strategy.ts";
-import { KewordExtractionStrategy } from "./keword_extraction_strategy.ts";
+import { KeywordExtractionStrategy } from "./keword_extraction_strategy.ts";
 import { Textrank } from "./textrank.ts";
 import { Vert } from "./vert.ts";
 import { IGNORE_LIST, STOP_WORDS } from "./constants.ts";
 
-export function keywordClassic(text: string) {
+export function keywordClassic(text: string, extractNgrams = false) {
   const metadata = preliminaries(text);
   const document = extractDocument(metadata);
-  // const ngrams = extractNgramTextrank(document, metadata);
-  const ngrams = extractKeywordsTextrank(document, metadata);
+
+  const ngrams = extractNgrams
+    ? extractNgramTextrank(document, metadata)
+    : extractKeywordsTextrank(document, metadata);
+
   const sortedNgrams = ngrams.toSorted((a, b) => b.score - a.score);
   const scoredNgrams = getScores(sortedNgrams);
-
   return scoredNgrams;
 }
 
@@ -93,9 +95,8 @@ export function extractKeywordsTextrank(
   _metadata: DocumentMetadata[],
 ): Vert[] {
   const words = document.flatMap((t) => t).map((u) => [u]);
-  const textrank = new Textrank(new KewordExtractionStrategy(2));
+  const textrank = new Textrank(new KeywordExtractionStrategy(2));
   const ranked = textrank.extractData(words);
-  // const completeTerms = recontextualizeTerms(ranked, metadata);
   return ranked;
 }
 

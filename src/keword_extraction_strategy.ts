@@ -14,7 +14,7 @@ export const COREFERENCE_WINDOW_SIZE = 2;
  * @param ngrams An array term arrays. ngrams represent sentences.
  * @returns the scored and sorted results.
  */
-export class KewordExtractionStrategy extends ExtractionStrategy {
+export class KeywordExtractionStrategy extends ExtractionStrategy {
 	constructor(public coreferenceWindowSize = COREFERENCE_WINDOW_SIZE) {
 		super();
 	}

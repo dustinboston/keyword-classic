@@ -9,7 +9,7 @@
 export function calculateCosineSimilarityMatrix(
   tfIdfMatrixA: number[][],
   tfIdfMatrixB?: number[][]
-): number[][] {
+):number[][] {
   const similarityMatrix: number[][] = [];
   const matrixB = tfIdfMatrixB ?? tfIdfMatrixA;
 
